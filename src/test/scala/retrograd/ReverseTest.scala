@@ -46,6 +46,18 @@ class ReverseTest extends AnyFunSuite {
 		assert(ans.a === ansr +- epsilon)
 	}
 
+	test("Readme example") {
+		// Reverse example:
+		val x = Dual(0.7)
+		val y = Dual(5.5)
+		val evaluation = x * y + x.sin
+		val xGradient = x.grad
+		val yGradient = y.grad
+		println(s"Evaluated expression ${evaluation.a}, gradients $xGradient, $yGradient")
+		/* Evaluated expression 4.494217687237691, gradients 6.264842187284488, 0.7
+		* */
+	}
+
 	test("sigmoid test") {
 		object SigmoidActivation {
 			def activeFunc(d: Double): Double = 1.0 / (1 + scala.math.exp(-d))
