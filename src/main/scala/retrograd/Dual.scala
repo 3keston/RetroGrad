@@ -18,12 +18,12 @@ abstract case class Dual(a: Double, b: Double = 1.0, op: Op = IDT) {
 
 	def grad: Double =
 		checkpoint.getOrElse({
-			checkpoint = Some({
+			val vjp =
 				if (children.nonEmpty)
 					children.map(_.adjoint(this)).sum
 				else 1.0
-			})
-			checkpoint.get
+			checkpoint = Some(vjp)
+			vjp
 		})
 
 	def + (j: Dual): Dual = {
