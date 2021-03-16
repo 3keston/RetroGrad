@@ -84,12 +84,12 @@ object Dual {
 		}
 		else if (localArity == 2) new Dual(a, b, op) {
 			def adjoint(v: Dual): Double = {
-				val partials = parents.map { parent =>
+				val partials = parents.iterator.map { parent =>
 					if (parent == v)
 						v.copy(b = grad)
 					else parent.copy(b = 0.0)
 				}
-				Primitives.funcMap2(op)(partials.head, partials.tail.head).b
+				Primitives.funcMap2(op)(partials.next(), partials.next()).b
 			}
 		}
 		else throw new Exception(s"Unsupported arity for $op")
