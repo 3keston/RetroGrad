@@ -1,7 +1,7 @@
 # RetroGrad
 Minimalist pedagogical automatic differentiation in Scala.
 
-In reverse mode, `Dual` nodes are assembled into a graph with gradients accessed via the `grad` method. Forward mode is supported by directly composing primitive operatures, e.g. `multiply(Dual(1.5 , 1.0) , Dual(0.5 , 0.0))` will compute the gradient wrt the first param.
+In reverse mode, `Dual` nodes are assembled into a graph with gradients accessed via the `grad` method. Forward mode is supported by directly composing primitive operations, e.g. `multiply(Dual(1.5 , 1.0) , Dual(0.5 , 0.0))` will compute the gradient wrt the first param.
 
 Example use:
 
