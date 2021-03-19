@@ -2,7 +2,7 @@ package retrograd
 
 import Op._
 
-abstract class Dual(val a: Double, val b: Double = 1.0, op: Op = IDT) {
+abstract class Dual(val a: Double, val b: Double = 1.0, val op: Op = IDT) {
 
 	private val childrenBldr = Seq.newBuilder[Dual]
 
