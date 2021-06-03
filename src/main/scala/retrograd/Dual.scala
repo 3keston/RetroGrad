@@ -75,14 +75,14 @@ abstract class Dual(val a: Double, val b: Double = 1.0, val op: Op = IDT) {
 object Dual {
 	import Primitives._
 	def apply(a: Double, b: Double = 1.0, op: Op = IDT): Dual = {
-		val localArity = arity(op)
-		if (localArity == 0) new Dual(a, b, op) {
+		val opArity = arity(op)
+		if (opArity == 0) new Dual(a, b, op) {
 			def adjoint(v: Dual): Double = 1.0
 		}
-		else if (localArity == 1) new Dual(a, b, op) {
+		else if (opArity == 1) new Dual(a, b, op) {
 			def adjoint(v: Dual): Double = Primitives.funcMap1(op)(v.copy(b = grad)).b
 		}
-		else if (localArity == 2) new Dual(a, b, op) {
+		else if (opArity == 2) new Dual(a, b, op) {
 			def adjoint(v: Dual): Double = {
 				val partials = parents.iterator.map { parent =>
 					if (parent == v)
@@ -92,6 +92,6 @@ object Dual {
 				Primitives.funcMap2(op)(partials.next(), partials.next()).b
 			}
 		}
-		else throw new Exception(s"Unsupported arity for $op")
+		else throw new Exception(s"Unsupported ${opArity}-ary $op")
 	}
 }
