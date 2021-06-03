@@ -52,7 +52,9 @@ abstract class Dual(val a: Double, val b: Double = 1.0, val op: Op = IDT) {
 
 	def asTuple: (Double, Double) = (a, b)
 
-	def copy(a: Double = this.a, b: Double = this.b, op: Op = this.op): Dual = Dual(a, b, op)
+	def copy(a: Double = this.a,
+	         b: Double = this.b,
+	         op: Op    = this.op): Dual = Dual(a, b, op)
 }
 
 object Dual {
