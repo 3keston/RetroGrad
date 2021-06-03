@@ -14,17 +14,17 @@ abstract class Dual(val a: Double, val b: Double = 1.0, val op: Op = IDT) {
 
 	def adjoint(v: Dual): Double
 
-	private var checkpoint: Option[Double] = None
+	private var checkpoint: Double = Double.NaN
 
 	def grad: Double =
-		checkpoint.getOrElse({
+		if (checkpoint.isNaN) {
 			val vjp =
 				if (children.nonEmpty)
 					children.map(_.adjoint(this)).sum
 				else 1.0
-			checkpoint = Some(vjp)
+			checkpoint = vjp
 			vjp
-		})
+		} else checkpoint
 
 	def + (j: Dual): Dual = {
 		val out = Dual(a + j.a, op = ADD)
