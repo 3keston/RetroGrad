@@ -28,43 +28,44 @@ abstract class Dual(val a: Double, val b: Double = 1.0, val op: Op = IDT) {
 
 	def + (j: Dual): Dual = {
 		val out = Dual(a + j.a, op = ADD)
-		out.parentsBldr += this
-		out.parentsBldr += j
-		childrenBldr    += out
-		j.childrenBldr  += out
+		updateAdjacent2(out, j)
 		out
 	}
 
 	def * (j: Dual): Dual = {
 		val out = Dual(a * j.a, op = MUL)
-		out.parentsBldr += this
-		out.parentsBldr += j
-		childrenBldr    += out
-		j.childrenBldr  += out
+		updateAdjacent2(out, j)
 		out
 	}
 
 	def / (j: Dual): Dual = {
 		val out = Dual(a / j.a, op = DIV)
-		out.parentsBldr += this
-		out.parentsBldr += j
-		childrenBldr    += out
-		j.childrenBldr  += out
+		updateAdjacent2(out, j)
 		out
 	}
 
 	def sin: Dual = {
 		val out = Dual(math.sin(a), op = SIN)
-		out.parentsBldr += this
-		childrenBldr    += out
+		updateAdjacent1(out)
 		out
 	}
 
 	def exp: Dual = {
 		val out = Dual(math.exp(a), op = EXP)
+		updateAdjacent1(out)
+		out
+	}
+
+	private def updateAdjacent1(out: Dual): Unit = {
 		out.parentsBldr += this
 		childrenBldr    += out
-		out
+	}
+
+	private def updateAdjacent2(out: Dual, j: Dual): Unit = {
+		out.parentsBldr += this
+		out.parentsBldr += j
+		childrenBldr    += out
+		j.childrenBldr  += out
 	}
 
 	def asTuple: (Double, Double) = (a, b)
