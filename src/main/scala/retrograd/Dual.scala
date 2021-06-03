@@ -4,18 +4,6 @@ import Op._
 
 abstract class Dual(val a: Double, val b: Double = 1.0, val op: Op = IDT) {
 
-	private val childrenBldr = Seq.newBuilder[Dual]
-
-	private val parentsBldr = Seq.newBuilder[Dual]
-
-	def children: Seq[Dual] = childrenBldr.result()
-
-	def parents: Seq[Dual] = parentsBldr.result()
-
-	def adjoint(v: Dual): Double
-
-	private var checkpoint: Double = Double.NaN
-
 	def grad: Double =
 		if (checkpoint.isNaN) {
 			val vjp =
@@ -26,6 +14,8 @@ abstract class Dual(val a: Double, val b: Double = 1.0, val op: Op = IDT) {
 			vjp
 		} else checkpoint
 
+	def adjoint(v: Dual): Double
+
 	def + (j: Dual): Dual = updateAdjacent2(Dual(a + j.a, op = ADD), j)
 
 	def * (j: Dual): Dual = updateAdjacent2(Dual(a * j.a, op = MUL), j)
@@ -35,6 +25,16 @@ abstract class Dual(val a: Double, val b: Double = 1.0, val op: Op = IDT) {
 	def sin: Dual = updateAdjacent1(Dual(math.sin(a), op = SIN))
 
 	def exp: Dual = updateAdjacent1(Dual(math.exp(a), op = EXP))
+
+	def children: Seq[Dual] = childrenBldr.result()
+
+	def parents: Seq[Dual] = parentsBldr.result()
+
+	private var checkpoint: Double = Double.NaN
+
+	private val childrenBldr = Seq.newBuilder[Dual]
+
+	private val parentsBldr = Seq.newBuilder[Dual]
 
 	private def updateAdjacent1(out: Dual): Dual = {
 		out.parentsBldr += this
