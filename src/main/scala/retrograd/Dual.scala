@@ -26,46 +26,28 @@ abstract class Dual(val a: Double, val b: Double = 1.0, val op: Op = IDT) {
 			vjp
 		} else checkpoint
 
-	def + (j: Dual): Dual = {
-		val out = Dual(a + j.a, op = ADD)
-		updateAdjacent2(out, j)
-		out
-	}
+	def + (j: Dual): Dual = updateAdjacent2(Dual(a + j.a, op = ADD), j)
 
-	def * (j: Dual): Dual = {
-		val out = Dual(a * j.a, op = MUL)
-		updateAdjacent2(out, j)
-		out
-	}
+	def * (j: Dual): Dual = updateAdjacent2(Dual(a * j.a, op = MUL), j)
 
-	def / (j: Dual): Dual = {
-		val out = Dual(a / j.a, op = DIV)
-		updateAdjacent2(out, j)
-		out
-	}
+	def / (j: Dual): Dual = updateAdjacent2(Dual(a / j.a, op = DIV), j)
 
-	def sin: Dual = {
-		val out = Dual(math.sin(a), op = SIN)
-		updateAdjacent1(out)
-		out
-	}
+	def sin: Dual = updateAdjacent1(Dual(math.sin(a), op = SIN))
 
-	def exp: Dual = {
-		val out = Dual(math.exp(a), op = EXP)
-		updateAdjacent1(out)
-		out
-	}
+	def exp: Dual = updateAdjacent1(Dual(math.exp(a), op = EXP))
 
-	private def updateAdjacent1(out: Dual): Unit = {
+	private def updateAdjacent1(out: Dual): Dual = {
 		out.parentsBldr += this
 		childrenBldr    += out
+		out
 	}
 
-	private def updateAdjacent2(out: Dual, j: Dual): Unit = {
+	private def updateAdjacent2(out: Dual, j: Dual): Dual = {
 		out.parentsBldr += this
 		out.parentsBldr += j
 		childrenBldr    += out
 		j.childrenBldr  += out
+		out
 	}
 
 	def asTuple: (Double, Double) = (a, b)
